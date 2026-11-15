@@ -1,0 +1,4 @@
+# Shell scripts must keep LF line endings, even when checked out on Windows,
+# otherwise bash inside Linux containers fails with "bad interpreter".
+*.sh text eol=lf
+Makefile text eol=lf
