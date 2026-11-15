@@ -218,3 +218,22 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---------------------------------------------------------------
+# MatchPulse project-specific ignores
+# ---------------------------------------------------------------
+# Raw and generated data (StatsBomb JSON, Kaggle SQLite, local Delta tables)
+data/*
+!data/.gitkeep
+!data/README.md
+
+# IDE / OS files (each teammate uses their own IDE settings)
+.idea/
+.vscode/
+.DS_Store
+
+# Local Delta / Spark scratch output
+spark-warehouse/
+metastore_db/
+derby.log
+*.parquet
