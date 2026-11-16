@@ -6,19 +6,71 @@
   "type": "object",
   "additionalProperties": true,
   "required": [
-    "schema_version", "match_id", "signal", "period", "minute", "second",
-    "home_team", "away_team", "events_emitted", "emitted_at"
+    "schema_version",
+    "match_id",
+    "signal",
+    "period",
+    "minute",
+    "second",
+    "home_team",
+    "away_team",
+    "events_emitted",
+    "emitted_at"
   ],
   "properties": {
-    "schema_version": { "const": 1 },
-    "match_id": { "type": "string", "pattern": "^[0-9]+$" },
-    "signal": { "enum": ["kick_off", "half_time", "second_half_start", "full_time"] },
-    "period": { "type": "integer", "minimum": 1, "maximum": 5 },
-    "minute": { "type": "integer", "minimum": 0 },
-    "second": { "type": "integer", "minimum": 0, "maximum": 59 },
-    "home_team": { "type": ["string", "null"] },
-    "away_team": { "type": ["string", "null"] },
-    "events_emitted": { "type": "integer", "minimum": 0 },
-    "emitted_at": { "type": "string", "format": "date-time" }
+    "schema_version": {
+      "const": 1
+    },
+    "match_id": {
+      "type": "string",
+      "pattern": "^[0-9]+$"
+    },
+    "replay_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Optional. One UUID per replay run of a match; the same on all its events and control signals."
+    },
+    "signal": {
+      "enum": [
+        "kick_off",
+        "half_time",
+        "second_half_start",
+        "full_time"
+      ]
+    },
+    "period": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "minute": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "second": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 59
+    },
+    "home_team": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "away_team": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "events_emitted": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "emitted_at": {
+      "type": "string",
+      "format": "date-time"
+    }
   }
 }

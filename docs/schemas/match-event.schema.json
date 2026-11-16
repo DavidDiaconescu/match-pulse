@@ -6,61 +6,213 @@
   "type": "object",
   "additionalProperties": true,
   "required": [
-    "schema_version", "match_id", "event_id", "index", "period", "timestamp",
-    "clock_seconds", "minute", "second", "type", "team", "team_id", "player",
-    "player_id", "position", "possession", "possession_team", "play_pattern",
-    "location", "end_location", "under_pressure", "xg", "outcome", "is_goal",
-    "card", "emitted_at"
+    "schema_version",
+    "match_id",
+    "event_id",
+    "index",
+    "period",
+    "timestamp",
+    "clock_seconds",
+    "minute",
+    "second",
+    "type",
+    "team",
+    "team_id",
+    "player",
+    "player_id",
+    "position",
+    "possession",
+    "possession_team",
+    "play_pattern",
+    "location",
+    "end_location",
+    "under_pressure",
+    "xg",
+    "outcome",
+    "is_goal",
+    "card",
+    "emitted_at"
   ],
   "properties": {
-    "schema_version": { "const": 1 },
-    "match_id": { "type": "string", "pattern": "^[0-9]+$" },
-    "event_id": { "type": "string", "format": "uuid" },
-    "index": { "type": "integer", "minimum": 1 },
-    "period": { "type": "integer", "minimum": 1, "maximum": 5 },
-    "timestamp": { "type": "string", "pattern": "^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$" },
-    "clock_seconds": { "type": "number", "minimum": 0 },
-    "minute": { "type": "integer", "minimum": 0 },
-    "second": { "type": "integer", "minimum": 0, "maximum": 59 },
-    "type": { "type": "string", "minLength": 1 },
-    "team": { "type": "string", "minLength": 1 },
-    "team_id": { "type": "integer" },
-    "player": { "type": ["string", "null"] },
-    "player_id": { "type": ["integer", "null"] },
-    "position": { "type": ["string", "null"] },
-    "possession": { "type": "integer", "minimum": 1 },
-    "possession_team": { "type": "string" },
-    "play_pattern": { "type": "string" },
+    "schema_version": {
+      "const": 1
+    },
+    "match_id": {
+      "type": "string",
+      "pattern": "^[0-9]+$"
+    },
+    "event_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "replay_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Optional. One UUID per replay run of a match; the same on all its events and control signals."
+    },
+    "index": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "period": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$"
+    },
+    "clock_seconds": {
+      "type": "number",
+      "minimum": 0
+    },
+    "minute": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "second": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 59
+    },
+    "type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "team": {
+      "type": "string",
+      "minLength": 1
+    },
+    "team_id": {
+      "type": "integer"
+    },
+    "player": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "player_id": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "position": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "possession": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "possession_team": {
+      "type": "string"
+    },
+    "play_pattern": {
+      "type": "string"
+    },
     "location": {
-      "type": ["array", "null"],
-      "items": { "type": "number" },
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "number"
+      },
       "minItems": 2,
       "maxItems": 2
     },
     "end_location": {
-      "type": ["array", "null"],
-      "items": { "type": "number" },
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "number"
+      },
       "minItems": 2,
       "maxItems": 3
     },
-    "under_pressure": { "type": "boolean" },
-    "xg": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
-    "outcome": { "type": ["string", "null"] },
-    "is_goal": { "type": "boolean" },
-    "card": { "enum": ["Yellow Card", "Second Yellow", "Red Card", null] },
-    "emitted_at": { "type": "string", "format": "date-time" }
+    "under_pressure": {
+      "type": "boolean"
+    },
+    "xg": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "outcome": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "is_goal": {
+      "type": "boolean"
+    },
+    "card": {
+      "enum": [
+        "Yellow Card",
+        "Second Yellow",
+        "Red Card",
+        null
+      ]
+    },
+    "emitted_at": {
+      "type": "string",
+      "format": "date-time"
+    }
   },
   "allOf": [
     {
       "description": "xg is only set on shots",
-      "if": { "properties": { "type": { "not": { "const": "Shot" } } } },
-      "then": { "properties": { "xg": { "type": "null" } } }
+      "if": {
+        "properties": {
+          "type": {
+            "not": {
+              "const": "Shot"
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "xg": {
+            "type": "null"
+          }
+        }
+      }
     },
     {
       "description": "player_id is null exactly when player is null",
-      "if": { "properties": { "player": { "type": "null" } } },
-      "then": { "properties": { "player_id": { "type": "null" } } },
-      "else": { "properties": { "player_id": { "type": "integer" } } }
+      "if": {
+        "properties": {
+          "player": {
+            "type": "null"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "player_id": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "player_id": {
+            "type": "integer"
+          }
+        }
+      }
     }
   ]
 }

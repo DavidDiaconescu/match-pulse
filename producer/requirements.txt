@@ -1,0 +1,4 @@
+confluent-kafka==2.16.1
+statsbombpy==1.22.0
+jsonschema==4.26.0
+pytest==9.2.0

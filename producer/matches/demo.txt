@@ -1,0 +1,4 @@
+# Euro 2020 matches used for the parallel replay demo (make replay-many).
+3788741   # Turkey 0-3 Italy (group stage, opening match)
+3788745   # England 1-0 Croatia (group stage)
+3794685   # Italy 2-1 Austria (round of 16, extra time)

@@ -31,8 +31,8 @@ names keep their original Unicode characters (e.g. `"Uğurcan Çakır"`).
   Kafka preserves order within a partition, so **consumers see one match's events in the
   order the producer sent them.** The producer sends with idempotence enabled, so retries
   cannot reorder or duplicate messages.
-- The send order is: sort by `period`, then `timestamp`, then `index` (see §5 for one known
-  data issue that affects this).
+- The send order is: sort by `period`, then `index` (StatsBomb's own sequence number).
+  We do **not** sort by `timestamp`, because the source has occasional wrong timestamps (§5).
 - Different matches can share a partition (6 partitions, many matches). Always group or filter
   by `match_id`, never by partition.
 - **There is no ordering between `match-events` and `match-control`**: they are separate
@@ -52,6 +52,7 @@ Example: a real shot from Turkey vs Italy, Euro 2020 (StatsBomb match `3788741`)
   "schema_version": 1,
   "match_id": "3788741",
   "event_id": "fc81639c-6e60-49d3-b29a-82b2b8c5746d",
+  "replay_id": "806b8853-bd76-49b0-ac41-cb0fe2e2b1ea",
   "index": 106,
   "period": 1,
   "timestamp": "00:02:09.222",
@@ -88,6 +89,7 @@ Example: a real shot from Turkey vs Italy, Euro 2020 (StatsBomb match `3788741`)
 | `schema_version` | int | yes | (none, set by producer) | currently `1` |
 | `match_id` | string | yes | file name `<match_id>.json` | StatsBomb ids are integers; we send them as **strings**, same as the key |
 | `event_id` | string (UUID) | yes | `id` | unique across all matches; use it to de-duplicate |
+| `replay_id` | string (UUID) | no | (none, set by producer) | one id per replay run of a match, the same on its events and control signals. Replaying a match twice gives two `replay_id`s, so consumers can keep the runs apart |
 | `index` | int | yes | `index` | StatsBomb's sequence number in the match, starting at 1 |
 | `period` | int | yes | `period` | 1, 2 = halves; 3, 4 = extra time; 5 = penalty shoot-out |
 | `timestamp` | string | yes | `timestamp` | **period clock** `HH:MM:SS.mmm`; resets to `00:00:00.000` at the start of each period |
@@ -151,6 +153,7 @@ One message per lifecycle signal, keyed by `match_id`.
 {
   "schema_version": 1,
   "match_id": "3788741",
+  "replay_id": "806b8853-bd76-49b0-ac41-cb0fe2e2b1ea",
   "signal": "half_time",
   "period": 1,
   "minute": 45,
@@ -166,6 +169,7 @@ One message per lifecycle signal, keyed by `match_id`.
 |---|---|---|---|
 | `schema_version` | int | yes | `1` |
 | `match_id` | string | yes | same as the key |
+| `replay_id` | string (UUID) | no | same `replay_id` as the replay's events |
 | `signal` | string | yes | one of `kick_off`, `half_time`, `second_half_start`, `full_time` |
 | `period` | int | yes | the period that is starting (`kick_off`, `second_half_start`) or ending (`half_time`, `full_time`) |
 | `minute`, `second` | int | yes | match clock when the signal applies (taken from the `Half Start` / `Half End` event) |
@@ -206,9 +210,12 @@ left → right (towards `x = 120`). The goal being attacked is centred at `(120,
 
 - **Occasional bad timestamps in the source.** In match `3788741`, event `index` 2001 (a
   `Ball Receipt*` completing the pass at `00:45:53.614`) has `timestamp = "00:00:00.189"` and
-  `minute = 0`. It is the only out-of-order event in that file. Sorting by
-  `(period, timestamp, index)` moves it to kick-off. How the producer handles this is decided
-  in Phase 2 and will be documented here. Consumers should not assume `clock_seconds` never
-  goes backwards within a period.
+  `minute = 0`. Across the 13 Euro 2020 matches we downloaded there are 10 such backward
+  jumps. **Decision:** the producer sends events in `(period, index)` order, so the event stays
+  where it belongs, and forwards its timestamp unchanged (we don't invent data). For pacing,
+  the producer measures each wait from the latest clock seen so far in the period, so a wrong
+  timestamp causes neither a negative nor a huge wait. **Consumers must not assume
+  `clock_seconds` never goes backwards within a period**; use `minute`/`second` of
+  neighbouring events, or ignore such events for time-based windows.
 - **Same-timestamp ties are common** (~30% of consecutive events share a timestamp, e.g. a
   `Pass` and its `Ball Receipt*`). `index` breaks the tie.

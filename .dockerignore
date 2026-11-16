@@ -1,0 +1,9 @@
+# Keep Docker build contexts small: never send data, git history or caches.
+data/
+.git/
+.idea/
+.vscode/
+**/__pycache__/
+**/.pytest_cache/
+**/*.pyc
+.env

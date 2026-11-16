@@ -18,6 +18,7 @@ reading with the `deltalake` Python package, without Spark).
 | Object store | MinIO (S3 API), bucket `lake` (env `LAKE_BUCKET`) |
 | Table path | `s3://lake/gold/<table_name>` |
 | Endpoint | `http://minio:9000` inside Docker, `http://localhost:9000` from the host |
+| Image | `pgsty/minio` (community build of MinIO; the official `minio/minio` images were withdrawn in 2025). A starter `minio` + `minio-init` service is already in `docker-compose.yml`; Mihai owns it |
 
 How Streamlit reads a table (delta-rs storage options):
 
@@ -88,7 +89,7 @@ deletion vectors, no column mapping) unless we have checked that delta-rs can re
 | `league_position` | INT | yes | final table position; `null` for tournaments |
 | `shots_for` | INT | yes | StatsBomb only |
 | `shots_against` | INT | yes | StatsBomb only |
-| `xg_for` | DOUBLE | yes | sum of `shot.statsbomb_xg`; StatsBomb only |
+| `xg_for` | DOUBLE | yes | sum of `shot.statsbomb_xg` (no shoot-out kicks); StatsBomb only |
 | `xg_against` | DOUBLE | yes | StatsBomb only |
 | `updated_at` | TIMESTAMP | no | |
 
@@ -112,7 +113,7 @@ changed team mid-season has one row per team.
 | `primary_position` | STRING | yes | most frequent `position.name` |
 | `matches_played` | INT | no | matches with at least one event by the player |
 | `minutes_played` | INT | yes | from lineups and substitutions, if Mihai computes it |
-| `goals` | INT | no | shots with outcome `Goal` (excludes own goals) |
+| `goals` | INT | no | shots with outcome `Goal` (excludes own goals and shoot-out kicks, `period = 5`) |
 | `non_penalty_goals` | INT | no | |
 | `shots` | INT | no | |
 | `shots_on_target` | INT | no | outcome in `Goal`, `Saved`, `Saved to Post` |
@@ -149,7 +150,8 @@ changed team mid-season has one row per team.
 
 ## 6. `shots` (shot-level, for shot maps)
 
-**Grain:** one row per StatsBomb `Shot` event.
+**Grain:** one row per StatsBomb `Shot` event, **excluding penalty shoot-outs** (`period = 5`):
+shoot-out kicks are not shots, goals or xG in football statistics.
 **Partitioned by:** `competition`, `season`.
 **Used by:** page 2 (shot map on a pitch; filter by `player_id`, plus `season`/`competition`).
 
@@ -201,3 +203,6 @@ Coordinates are kept **as StatsBomb provides them**, with no flipping. `mplsocce
    It's fine to leave it `null` in v1; the app then hides per-90 numbers.
 4. **Paths and bucket name**: OK with `s3://lake/gold/<table>`?
 5. **Refresh**: full overwrite per batch run is fine for the app (it caches for a few minutes).
+6. **Reference implementation**: `dashboards/streamlit/dev_fixtures.py` builds all four tables
+   from StatsBomb data with exactly these columns and types (pyarrow schemas at the top of the
+   file). It may be useful as a reference for the Spark job.

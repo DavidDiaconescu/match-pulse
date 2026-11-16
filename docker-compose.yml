@@ -102,12 +102,49 @@ services:
     restart: unless-stopped
 
   # ===========================================================================
-  # >>> MIHAI: batch layer services go here
-  #   - minio       (S3-compatible object store for the Delta Lake; ports 9000 API / 9001 console)
-  #   - minio-init  (one-shot: create the bucket, e.g. "lake", with the mc client)
-  #   - spark batch job container(s), if run in Docker
-  # Use the MINIO_* variables from .env.example. Add any volumes under "volumes:" below.
+  # >>> MIHAI: batch layer services
+  # minio + minio-init below were added by David as a STARTING POINT so the
+  # Streamlit app can be tested against a real S3 store. Mihai owns them: change
+  # freely (keep bucket "lake" and the s3://lake/gold/<table> paths from
+  # docs/gold-contract.md, or tell David).
+  #
+  # Image note: MinIO Inc. stopped publishing official Docker images in 2025
+  # (minio/minio is gone from Docker Hub; quay.io needs login). pgsty/minio is a
+  # community build of the same open-source MinIO server, multi-arch.
+  # Still to add here: spark batch job container(s), if run in Docker.
   # ===========================================================================
+  minio:
+    image: pgsty/minio:${MINIO_IMAGE_TAG:-RELEASE.2026-08-04T00-00-00Z}
+    container_name: minio
+    command: ["server", "/data", "--console-address", ":9001"]
+    ports:
+      - "${MINIO_API_PORT:-9000}:9000"      # S3 API
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"  # web console
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # One-shot: create the "lake" bucket with the MinIO client (mc ships in the image).
+  minio-init:
+    image: pgsty/minio:${MINIO_IMAGE_TAG:-RELEASE.2026-08-04T00-00-00Z}
+    container_name: minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      LAKE_BUCKET: ${LAKE_BUCKET:-lake}
+    entrypoint: ["sh", "-c", "mc alias set local http://minio:9000 \"$$MINIO_ROOT_USER\" \"$$MINIO_ROOT_PASSWORD\" && mc mb --ignore-existing local/$$LAKE_BUCKET"]
+    restart: "no"
 
   # ===========================================================================
   # >>> DAYANA: speed layer services go here
@@ -117,11 +154,61 @@ services:
   #   - grafana     (provisioning files in dashboards/grafana/)
   # ===========================================================================
 
-  # ===========================================================================
-  # >>> DAVID: added in later phases
-  #   - replay-producer  (Phase 2, run on demand with `docker compose run`)
-  #   - streamlit        (Phase 3)
-  # ===========================================================================
+  # ---------------------------------------------------------------------------
+  # Replay producer - NOT started by `docker compose up` (profile "tools").
+  # Run on demand:
+  #   docker compose run --rm replay-producer --matches 3788741 --speed 60
+  #   docker compose run --rm --entrypoint python replay-producer test_consumer.py --match 3788741
+  # Owner: David
+  # ---------------------------------------------------------------------------
+  replay-producer:
+    build:
+      context: .
+      dockerfile: producer/Dockerfile
+    image: matchpulse/replay-producer:dev
+    profiles: ["tools"]
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      KAFKA_BOOTSTRAP: kafka:9092
+    volumes:
+      # Read-write so statsbombpy can cache matches that are not downloaded yet.
+      - ${DATA_DIR_HOST:-./data}:/data
+      # Lets `make fetch-data` run scripts/fetch_statsbomb.py inside this image.
+      - ./scripts:/scripts:ro
+
+  # ---------------------------------------------------------------------------
+  # Streamlit historical analytics app: http://localhost:8501
+  # Reads gold Delta tables from MinIO with delta-rs (no Spark).
+  # Owner: David
+  # ---------------------------------------------------------------------------
+  streamlit:
+    build: ./dashboards/streamlit
+    image: matchpulse/streamlit:dev
+    container_name: streamlit
+    depends_on:
+      minio-init:
+        condition: service_completed_successfully
+    ports:
+      - "${STREAMLIT_PORT:-8501}:8501"
+    environment:
+      GOLD_URI: s3://${LAKE_BUCKET:-lake}/gold
+      S3_ENDPOINT: http://minio:9000
+      S3_ACCESS_KEY: ${MINIO_ROOT_USER:-minioadmin}
+      S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      DATA_DIR: /data
+    volumes:
+      # Read-only: dev_fixtures.py reads local StatsBomb files to build sample tables.
+      - ${DATA_DIR_HOST:-./data}:/data:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 20s
+    restart: unless-stopped
 
 volumes:
   kafka-data:
+  minio-data:

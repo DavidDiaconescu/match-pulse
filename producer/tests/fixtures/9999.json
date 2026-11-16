@@ -1,0 +1,661 @@
+[
+ {
+  "id": "00000000-0000-0000-0000-000000000001",
+  "index": 1,
+  "period": 1,
+  "timestamp": "00:00:00.000",
+  "minute": 0,
+  "second": 0,
+  "type": {
+   "id": 0,
+   "name": "Starting XI"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "duration": 0.0,
+  "tactics": {
+   "formation": 442,
+   "lineup": []
+  }
+ },
+ {
+  "id": "00000000-0000-0000-0000-000000000002",
+  "index": 2,
+  "period": 1,
+  "timestamp": "00:00:00.000",
+  "minute": 0,
+  "second": 0,
+  "type": {
+   "id": 0,
+   "name": "Starting XI"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 2,
+   "name": "Away United"
+  },
+  "duration": 0.0,
+  "tactics": {
+   "formation": 433,
+   "lineup": []
+  }
+ },
+ {
+  "id": "00000000-0000-0000-0000-000000000003",
+  "index": 3,
+  "period": 1,
+  "timestamp": "00:00:00.000",
+  "minute": 0,
+  "second": 0,
+  "type": {
+   "id": 0,
+   "name": "Half Start"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "duration": 0.0
+ },
+ {
+  "id": "00000000-0000-0000-0000-000000000004",
+  "index": 4,
+  "period": 1,
+  "timestamp": "00:00:00.000",
+  "minute": 0,
+  "second": 0,
+  "type": {
+   "id": 0,
+   "name": "Half Start"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 2,
+   "name": "Away United"
+  },
+  "duration": 0.0
+ },
+ {
+  "id": "00000000-0000-0000-0000-000000000005",
+  "index": 5,
+  "period": 1,
+  "timestamp": "00:00:01.000",
+  "minute": 0,
+  "second": 1,
+  "type": {
+   "id": 0,
+   "name": "Pass"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "duration": 0.0,
+  "player": {
+   "id": 10,
+   "name": "Ana Striker"
+  },
+  "position": {
+   "id": 23,
+   "name": "Center Forward"
+  },
+  "location": [
+   60.0,
+   40.0
+  ],
+  "pass": {
+   "end_location": [
+    70.0,
+    35.0
+   ],
+   "length": 11.2
+  }
+ },
+ {
+  "id": "00000000-0000-0000-0000-000000000006",
+  "index": 6,
+  "period": 1,
+  "timestamp": "00:00:02.500",
+  "minute": 0,
+  "second": 2,
+  "type": {
+   "id": 0,
+   "name": "Ball Receipt*"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "duration": 0.0,
+  "player": {
+   "id": 11,
+   "name": "Bo Winger"
+  },
+  "position": {
+   "id": 21,
+   "name": "Left Wing"
+  },
+  "location": [
+   70.0,
+   35.0
+  ]
+ },
+ {
+  "id": "00000000-0000-0000-0000-000000000007",
+  "index": 7,
+  "period": 1,
+  "timestamp": "00:10:00.000",
+  "minute": 10,
+  "second": 0,
+  "type": {
+   "id": 0,
+   "name": "Shot"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "duration": 0.0,
+  "player": {
+   "id": 10,
+   "name": "Ana Striker"
+  },
+  "position": {
+   "id": 23,
+   "name": "Center Forward"
+  },
+  "location": [
+   108.0,
+   40.0
+  ],
+  "under_pressure": true,
+  "shot": {
+   "statsbomb_xg": 0.76,
+   "end_location": [
+    120.0,
+    39.0,
+    0.5
+   ],
+   "outcome": {
+    "id": 97,
+    "name": "Goal"
+   },
+   "type": {
+    "id": 87,
+    "name": "Open Play"
+   }
+  }
+ },
+ {
+  "id": "00000000-0000-0000-0000-000000000008",
+  "index": 8,
+  "period": 1,
+  "timestamp": "00:00:00.100",
+  "minute": 0,
+  "second": 0,
+  "type": {
+   "id": 0,
+   "name": "Ball Receipt*"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "duration": 0.0,
+  "player": {
+   "id": 11,
+   "name": "Bo Winger"
+  },
+  "position": {
+   "id": 21,
+   "name": "Left Wing"
+  },
+  "location": [
+   100.0,
+   30.0
+  ],
+  "ball_receipt": {
+   "outcome": {
+    "id": 9,
+    "name": "Incomplete"
+   }
+  }
+ },
+ {
+  "id": "00000000-0000-0000-0000-000000000009",
+  "index": 9,
+  "period": 1,
+  "timestamp": "00:20:00.000",
+  "minute": 20,
+  "second": 0,
+  "type": {
+   "id": 0,
+   "name": "Foul Committed"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 2,
+   "name": "Away United"
+  },
+  "duration": 0.0,
+  "player": {
+   "id": 20,
+   "name": "Cy Defender"
+  },
+  "position": {
+   "id": 3,
+   "name": "Right Center Back"
+  },
+  "location": [
+   50.0,
+   20.0
+  ],
+  "foul_committed": {
+   "card": {
+    "id": 7,
+    "name": "Yellow Card"
+   }
+  }
+ },
+ {
+  "id": "00000000-0000-0000-0000-00000000000a",
+  "index": 10,
+  "period": 1,
+  "timestamp": "00:45:30.000",
+  "minute": 45,
+  "second": 30,
+  "type": {
+   "id": 0,
+   "name": "Half End"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "duration": 0.0
+ },
+ {
+  "id": "00000000-0000-0000-0000-00000000000b",
+  "index": 11,
+  "period": 1,
+  "timestamp": "00:45:30.000",
+  "minute": 45,
+  "second": 30,
+  "type": {
+   "id": 0,
+   "name": "Half End"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 2,
+   "name": "Away United"
+  },
+  "duration": 0.0
+ },
+ {
+  "id": "00000000-0000-0000-0000-00000000000c",
+  "index": 12,
+  "period": 2,
+  "timestamp": "00:00:00.000",
+  "minute": 45,
+  "second": 0,
+  "type": {
+   "id": 0,
+   "name": "Half Start"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "duration": 0.0
+ },
+ {
+  "id": "00000000-0000-0000-0000-00000000000d",
+  "index": 13,
+  "period": 2,
+  "timestamp": "00:00:00.000",
+  "minute": 45,
+  "second": 0,
+  "type": {
+   "id": 0,
+   "name": "Half Start"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 2,
+   "name": "Away United"
+  },
+  "duration": 0.0
+ },
+ {
+  "id": "00000000-0000-0000-0000-00000000000e",
+  "index": 14,
+  "period": 2,
+  "timestamp": "00:05:00.000",
+  "minute": 50,
+  "second": 0,
+  "type": {
+   "id": 0,
+   "name": "Shot"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 2,
+   "name": "Away United"
+  },
+  "duration": 0.0,
+  "player": {
+   "id": 21,
+   "name": "Di Forward"
+  },
+  "position": {
+   "id": 23,
+   "name": "Center Forward"
+  },
+  "location": [
+   100.0,
+   45.0
+  ],
+  "shot": {
+   "statsbomb_xg": 0.1,
+   "end_location": [
+    120.0,
+    41.0
+   ],
+   "outcome": {
+    "id": 100,
+    "name": "Saved"
+   },
+   "type": {
+    "id": 87,
+    "name": "Open Play"
+   }
+  }
+ },
+ {
+  "id": "00000000-0000-0000-0000-00000000000f",
+  "index": 15,
+  "period": 2,
+  "timestamp": "00:30:00.000",
+  "minute": 75,
+  "second": 0,
+  "type": {
+   "id": 0,
+   "name": "Own Goal Against"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "duration": 0.0,
+  "player": {
+   "id": 12,
+   "name": "Ed Back"
+  },
+  "position": {
+   "id": 2,
+   "name": "Right Back"
+  },
+  "location": [
+   5.0,
+   40.0
+  ]
+ },
+ {
+  "id": "00000000-0000-0000-0000-000000000010",
+  "index": 16,
+  "period": 2,
+  "timestamp": "00:30:00.000",
+  "minute": 75,
+  "second": 0,
+  "type": {
+   "id": 0,
+   "name": "Own Goal For"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 2,
+   "name": "Away United"
+  },
+  "duration": 0.0,
+  "location": [
+   115.0,
+   40.0
+  ]
+ },
+ {
+  "id": "00000000-0000-0000-0000-000000000011",
+  "index": 17,
+  "period": 2,
+  "timestamp": "00:31:00.000",
+  "minute": 76,
+  "second": 0,
+  "type": {
+   "id": 0,
+   "name": "Duel"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "duration": 0.0,
+  "player": {
+   "id": 11,
+   "name": "Bo Winger"
+  },
+  "position": {
+   "id": 21,
+   "name": "Left Wing"
+  },
+  "location": [
+   40.0,
+   10.0
+  ],
+  "duel": {
+   "type": {
+    "id": 10,
+    "name": "Aerial Lost"
+   }
+  }
+ },
+ {
+  "id": "00000000-0000-0000-0000-000000000012",
+  "index": 18,
+  "period": 2,
+  "timestamp": "00:47:00.000",
+  "minute": 92,
+  "second": 0,
+  "type": {
+   "id": 0,
+   "name": "Half End"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "duration": 0.0
+ },
+ {
+  "id": "00000000-0000-0000-0000-000000000013",
+  "index": 19,
+  "period": 2,
+  "timestamp": "00:47:00.000",
+  "minute": 92,
+  "second": 0,
+  "type": {
+   "id": 0,
+   "name": "Half End"
+  },
+  "possession": 1,
+  "possession_team": {
+   "id": 1,
+   "name": "Home FC"
+  },
+  "play_pattern": {
+   "id": 1,
+   "name": "Regular Play"
+  },
+  "team": {
+   "id": 2,
+   "name": "Away United"
+  },
+  "duration": 0.0
+ }
+]
