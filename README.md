@@ -32,6 +32,103 @@ Everything runs locally with one `docker compose up`.
 - Python 3.11+ for running scripts from the host (optional; everything can also run in Docker).
 - `make` (macOS/Linux/WSL). Windows users without `make` can use the equivalent `scripts/*.sh`.
 
+## Tutorial de pornire (pentru Mihai și Dayana)
+
+Pașii de mai jos pornesc tot proiectul pe laptopul tău, de la zero. Durează ~15 minute
+prima dată (se descarcă imaginile Docker), apoi ~1 minut.
+
+### Pasul 1: instalează programele necesare (o singură dată)
+
+**Mac**
+1. Instalează [Docker Desktop](https://www.docker.com/products/docker-desktop/) și pornește-l
+   (iconița cu balena trebuie să apară sus, lângă ceas).
+2. `git` și `make` le ai deja; dacă terminalul spune că lipsesc, rulează `xcode-select --install`.
+
+**Windows**
+1. Instalează WSL2 cu Ubuntu: deschide PowerShell ca Administrator și rulează `wsl --install`,
+   apoi repornește calculatorul și setează un user/parolă în Ubuntu.
+2. Instalează [Docker Desktop](https://www.docker.com/products/docker-desktop/). În
+   *Settings → Resources → WSL integration*, bifează **Ubuntu**.
+3. Deschide **Ubuntu** (din meniul Start) și rulează: `sudo apt update && sudo apt install -y git make`.
+4. **Toate comenzile de mai jos se rulează în terminalul Ubuntu**, nu în PowerShell/CMD.
+
+**Ambele:** în Docker Desktop → *Settings → Resources*, dă-i Docker-ului cel puțin **6 GB RAM**
+(Spark are nevoie de memorie).
+
+Verifică instalarea:
+```bash
+docker --version          # trebuie să afișeze o versiune
+docker compose version    # trebuie să fie v2.x
+```
+
+### Pasul 2: descarcă proiectul
+
+```bash
+cd ~                      # pe Windows: rămâi în folderul Ubuntu, NU în /mnt/c/...
+git clone <URL-ul repo-ului de pe GitHub> match-pulse
+cd match-pulse
+```
+
+> Pe Mac, nu pune proiectul în `Documents` sau `Desktop` dacă ai iCloud activ (vezi
+> Troubleshooting). Pe Windows, proiectul în `/mnt/c/...` merge foarte încet; ține-l în `~`.
+
+### Pasul 3: pornește platforma
+
+```bash
+make up          # pornește Kafka, Kafka UI, MinIO, Streamlit (prima dată durează câteva minute)
+make health      # trebuie să vezi OK la fiecare serviciu
+```
+
+Deschide în browser:
+- Kafka UI: http://localhost:8080 (topic-urile `match-events`, `match-control`, `match-alerts`)
+- MinIO: http://localhost:9001 (user `minioadmin`, parolă `minioadmin`)
+- Streamlit: http://localhost:8501
+
+### Pasul 4: descarcă datele și trimite un meci în Kafka
+
+```bash
+make fetch-data                              # datele StatsBomb în data/ (o singură dată)
+make replay-match MATCH=3788741 SPEED=60     # Turcia–Italia, ~2 minute; lasă-l să termine
+make test-replay MATCH=3788741               # trebuie să afișeze RESULT: PASS
+```
+
+În timp ce rulează replay-ul, în Kafka UI → *Topics → match-events → Messages* vezi
+mesajele cum apar. Formatul lor este descris în [`docs/event-schema.md`](docs/event-schema.md).
+
+### Pasul 5: datele de test pentru Streamlit
+
+```bash
+make dev-fixtures     # scrie tabele gold de test în MinIO
+```
+
+Reîncarcă http://localhost:8501: paginile *Team profile*, *Player shot map* și *League trends*
+arată date (cu bannerul „DEV DATA" până când există tabelele reale ale lui Mihai).
+
+### Pasul 6: oprește tot
+
+```bash
+make down                 # oprește containerele, datele rămân
+bash scripts/down.sh -v   # oprește și ȘTERGE datele din Kafka și MinIO (o luăm de la zero)
+```
+
+### Ce te interesează pe tine
+
+| Cine | De unde citești / unde scrii | Ce comandă te ajută |
+|---|---|---|
+| **Dayana** (streaming) | din containere: Kafka la `kafka:9092`; de pe laptop: `localhost:9094`. Citești `match-events` + `match-control`, scrii în `match-alerts` | `make replay-match` / `make replay-many` ca să ai date care curg |
+| **Mihai** (batch) | datele brute sunt în `data/` (montat ca `/data` în containere); MinIO la `minio:9000` (din containere) sau `localhost:9000`, bucket `lake`; tabelele gold merg în `s3://lake/gold/<tabel>` | `make load-history`, `make run-batch` apelează `batch/load_history.sh` și `batch/run_batch.sh` (le creezi tu) |
+
+Serviciile voastre (Spark, Redis, Grafana) le adăugați în secțiunea voastră din
+`docker-compose.yml`; `make health` le verifică automat. `make help` listează toate comenzile.
+
+### Dacă ceva nu merge
+
+- `Cannot connect to the Docker daemon` → Docker Desktop nu e pornit; pornește-l și așteaptă ~30 s.
+- `make health` arată FAIL → `docker compose logs <serviciu>` și trimite-mi output-ul.
+- `port is already allocated` → alt program folosește portul; `cp .env.example .env` și schimbă portul acolo.
+- Pe Windows, `bash: ...\r: command not found` → ai clonat din Windows, nu din Ubuntu; clonează din nou din terminalul Ubuntu.
+- Mai multe în tabelul *Troubleshooting* de mai jos.
+
 ## Quick start
 
 ```bash
